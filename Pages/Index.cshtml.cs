@@ -93,7 +93,7 @@ public class IndexModel : PageModel
             return main.OnGet();
         });
 
-        bool isCompletedSuccessfully = task.Wait(TimeSpan.FromSeconds(3));
+        bool isCompletedSuccessfully = task.Wait(TimeSpan.FromSeconds(20));
 
         if (isCompletedSuccessfully)
         {
