@@ -1,0 +1,122 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="container">
+    <div>
+        <div>
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    @Model.currentChest
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @if(Model.ChestsOnline != null) 
+                        {
+                            foreach(string chest in Model.ChestsOnline)
+                            {
+                                <li><a class="dropdown-item" asp-route-chest="@chest" method="post">@chest</a></li>
+                            }
+                        }
+                </ul>
+            </div>
+        </div>
+        <div class="center2 col border-bottom" style="width:100%">
+            <h2 class="display-6">My Chest</h2>
+            <p>Contents of all my chests.</p>
+            @if (Model.serverStatus)
+            {
+                <span class="logged-in">Chest Server Status: Online</span>
+            }
+            else
+            {
+                <span class="logged-out">Chest Server Status: Offline</span>
+            }
+        </div>
+        
+    </div>
+
+
+    @* The table below displays the data retrieved from the API *@
+    <table style="width:100%" class="center1">
+
+        @* Begin render API data code block *@
+        <tbody>
+            @* The Razor keyword @foreach is used to iterate through the
+            data returned to the data model from the HTTP operations. *@
+            @if (Model.ItemSets != null)
+            {
+                {
+                    int i = 1;
+                    bool open = false;
+                    foreach (var list in Model.ItemSets.Values)
+                    {
+                        if (list.Count == 0)
+                        {
+                            continue;
+                        }
+                        int qty = 0;
+                        var obj = list[0];
+                        foreach (var item in list)
+                        {
+                            qty += item.count;
+                        }
+                        if (i % 10 == 1)
+                        {
+                            @Html.Raw("<tr>")
+                            open = true;
+                        }
+
+                        string hover = $"{obj.name.Split(':')[1].Replace('_', ' ')} {qty}";
+                        string title = $"<h6 class=\"center2\">Item | Qty</h6>";
+                        string func = $"postData(\"/AddToCart/?rawId={obj.name}&origin={Model.currentChest}\")";
+
+                        <td width="10%" class="py-3 px-3 center2" data-bs-toggle="popover" data-bs-html="true"
+                            data-bs-placement="top" data-bs-trigger="hover" data-bs-title="@title" data-bs-content="@hover">
+                            @* The following div contains information to handle the edit and delete functions. *@
+                            <div class="btn-group btn-group-sm" role="group">
+                                @* Routes to the Edit page and passes the id of the record. *@
+
+                                <button type="button" class="btn btn-outline-light py-2 px-2" onclick="@func">
+                                    <img src=@obj.Url alt=@obj.name loading="lazy" style="width:58px;height:58px;">
+                                </button>
+                            </div>
+                        </td>
+                        if (i % 10 == 0)
+                        {
+                            @Html.Raw("</tr>")
+                            open = false;
+                        }
+                        i++;
+                    }
+                    if (open)
+                    {
+                        @Html.Raw("</tr>")
+                    }
+                }
+            }
+        </tbody>
+        @* End render API data code block *@
+    </table>
+    @section scripts {
+        <script>
+            function postData(destination) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("CartComponent").innerHTML = this.responseText;
+                        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                            keyboard: true,
+                            focus: true
+                        });
+                        myModal.toggle();
+                    }
+                };
+                xhttp.open("GET", destination, true);
+                xhttp.send();
+            }
+        </script>
+    }
+</div>

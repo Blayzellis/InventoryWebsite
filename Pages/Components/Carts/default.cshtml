@@ -1,0 +1,48 @@
+@model List<Models.CartItem>
+<!-- Button trigger modal -->
+<a class="navbar-brand" type="button" data-bs-toggle="modal" data-bs-target="#myModal">
+    Cart
+</a>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="myModalLabel">Your Cart</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-page="/AddToCart" asp-page-handler="edit" method="post" id="form1">
+                <div class="modal-body">
+                    <ul>
+                        @foreach (var obj in Model)
+                        {
+
+                            string itemInCart = $"{obj.ProductId.Split(':')[1].Replace('_', ' ')} ";
+                            <div class="d-flex flex-row">
+                                <div class="d-flex justify-content-start">
+                                    <b>@itemInCart</b>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="hidden" id="Id" name="Id" value="@obj.ProductId">
+                                    <input type="number" id="amount" name="amount" value="@obj.Quantity" style="width:25%">
+                                </div>
+
+                            </div>
+
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Checkout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+    </script>
+}
+@*<link rel="stylesheet" href="~/@(nameof(InventoryWebsite)).styles.css" />*@

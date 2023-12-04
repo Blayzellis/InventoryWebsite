@@ -1,0 +1,74 @@
+﻿@page
+@model ShoppingCartModel
+@{
+    ViewData["Title"] = "ShoppingCart";
+}
+
+<div class="container">
+
+    <div>
+        <div class="center2 col border-bottom" style="width:100%">
+            <h2 class="display-6">My Cart</h2>
+        </div>
+    </div>
+
+
+    @* The table below displays the data retrieved from the API *@
+    <table style="width:100%" class="center1">
+
+        @* Begin render API data code block *@
+        <tbody>
+
+            @* The Razor keyword @foreach is used to iterate through the
+            data returned to the data model from the HTTP operations. *@
+            @if (Model.MyCart != null)
+            {
+                {
+                    int i = 1;
+                    bool open = false;
+                    foreach (var obj in Model.MyCart)
+                    {
+                        if (i % 10 == 1)
+                        {
+                            @Html.Raw("<tr>")
+                            ;
+                            open = true;
+                        }
+                        string itemInCart = $"{obj.ProductId.Split(':')[1].Replace('_', ' ')} {obj.Quantity}";
+                        <td width="10%" class="py-3 px-3 center2">
+                            @itemInCart
+                        </td>
+                        if (i % 10 == 0)
+                        {
+                            @Html.Raw("</tr>")
+                            ;
+                            open = false;
+                        }
+                        i++;
+                    }
+                    if (open)
+                    {
+                        @Html.Raw("</tr>")
+                        ;
+                    }
+                }
+            }
+        </tbody>
+        @* End render API data code block *@
+
+    </table>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="player">Select Player</label>
+            <select class="form-control" id="player" name="player" style="width:25%">
+                <option>Blayze</option>
+                <option>Chelse</option>
+                <option>Austin</option>
+                <option>Olivia</option>
+                <option>Bryce</option>
+            </select>
+        </div>
+        <button class="btn btn-primary">Click to send items</button>
+    </form>
+</div>
