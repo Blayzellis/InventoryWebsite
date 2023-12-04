@@ -39,10 +39,12 @@ public class WebSocketController : ControllerBase
         }
     }
     #endregion
-    public string OnGet() 
+    public async Task<string> OnGet() 
     {
         mode = Mode.Get;
-        while(mode == Mode.Get){}
+        while(mode == Mode.Get){
+            await Task.Delay(25);
+        }
         return result;
     }
     public bool OnPost(string data) {
