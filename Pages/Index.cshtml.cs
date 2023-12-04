@@ -58,6 +58,9 @@ public class IndexModel : PageModel
     public async Task PageLoad(string chest)
     {
         WebSocketController _main = null;
+        if(!data.ContainsKey(currentChest)) {
+            data.Add(currentChest, null);
+        }
 
         foreach (WebSocketController wsc in WebSocketController.PC)
         {
@@ -81,7 +84,7 @@ public class IndexModel : PageModel
         }
 
 
-        if (data is null)
+        if (data[currentChest] is null)
         {
         }
         else
