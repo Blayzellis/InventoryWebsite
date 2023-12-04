@@ -38,6 +38,9 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync(string chest = "main")
     {
+        if(data is null) {
+            data = new Dictionary<string, string?>();
+        }
         currentChest = chest;
         ChestsOnline = new List<string>();
         GetChests();
