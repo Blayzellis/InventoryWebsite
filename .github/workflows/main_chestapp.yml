@@ -54,4 +54,4 @@ jobs:
           app-name: 'ChestApp'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE_02CE358FC0E649A485ECFE6C8716BD13}}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_92E5ED51C45B4A5FBE381C7194A0D5A5 }}
