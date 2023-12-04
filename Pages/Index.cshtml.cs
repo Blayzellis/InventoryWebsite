@@ -24,10 +24,11 @@ public class IndexModel : PageModel
     }
 
     public bool serverStatus = false;
-    static string? data = null;
+
     public static Dictionary<string, string> _dict = null;
 
-
+    [BindProperty]
+    public static Dictionary<string, string?> data { get; set; }
     [BindProperty]
     public Dictionary<string, List<ChestModel>>? ItemSets { get; set; }
     [BindProperty]
@@ -43,7 +44,8 @@ public class IndexModel : PageModel
         await PageLoad(chest);
     }
 
-    public void GetChests() {
+    public void GetChests()
+    {
         foreach (WebSocketController wsc in WebSocketController.PC)
         {
             ChestsOnline.Add(wsc.name);
@@ -66,7 +68,7 @@ public class IndexModel : PageModel
             if (_main.mode == WebSocketController.Mode.Ping)
             {
                 Console.WriteLine("Here2.0");
-                data = DoGetTask(_main);
+                data[currentChest] = DoGetTask(_main);
             }
             serverStatus = true;
         }
@@ -81,7 +83,7 @@ public class IndexModel : PageModel
         }
         else
         {
-            ItemSets = SetModel(JsonSerializer.Deserialize<IEnumerable<ChestModel>>(data));
+            ItemSets = SetModel(JsonSerializer.Deserialize<IEnumerable<ChestModel>>(data[currentChest]));
             await GetImage();
         }
     }

@@ -13,11 +13,13 @@
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    @if(Model.ChestsOnline != null) 
+                    @if(IndexModel.data != null) 
                         {
-                            foreach(string chest in Model.ChestsOnline)
+                            foreach(KeyValuePair<string, string?> d in IndexModel.data)
                             {
-                                <li><a class="dropdown-item" asp-route-chest="@chest" method="post">@chest</a></li>
+                                bool status = Model.ChestsOnline.Contains(d.Key);
+                                string color = status ? "logged-in" : "logged-out"; 
+                                <li><a class="dropdown-item @color" asp-route-chest="@d.Key" method="post">@d.Key</a></li>
                             }
                         }
                 </ul>
