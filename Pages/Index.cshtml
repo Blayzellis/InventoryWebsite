@@ -25,7 +25,7 @@
                 </ul>
             </div>
         </div>
-        <div class="center2 col border-bottom" style="width:100%">
+        <div class="center2 col" style="width:100%">
             <h2 class="display-6">My Chest</h2>
             <p>Contents of all my chests.</p>
             @if (Model.serverStatus)
@@ -121,7 +121,7 @@
             }
             function tableSort() {
                 // Declare variables
-                var input, filter, table, tr, td, i, txtValue;
+                var input, filter, table, tr, td, tds, i, txtValue;
                 input = document.getElementById("myInput");
                 filter = input.value.toUpperCase();
                 table = document.getElementById("myTable");
@@ -129,13 +129,16 @@
 
                 // Loop through all table rows, and hide those who don't match the search query
                 for (i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[0];
-                    if (td) {
-                        txtValue = td.getAttribute("value");
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
-                        } else {
-                            tr[i].style.display = "none";
+                    tds = tr[i].getElementsByTagName("td");
+                    for (j = 0; j < tds.length; j++) {
+                        td = tds[j];
+                        if (td) {
+                            txtValue = td.getAttribute("value");
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                td.style.display = "";
+                            } else {
+                                td.style.display = "none";
+                            }
                         }
                     }
                 }

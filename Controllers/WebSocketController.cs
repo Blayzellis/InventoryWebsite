@@ -55,7 +55,7 @@ public class WebSocketController : ControllerBase
     }
     private async Task UseSocket(WebSocket webSocket)
     {
-        var buffer = new byte[1024 * 48];
+        var buffer = new byte[16000000];
         var receiveResult = await webSocket.ReceiveAsync(
             new ArraySegment<byte>(buffer), CancellationToken.None);
         name = System.Text.Encoding.Default.GetString(
