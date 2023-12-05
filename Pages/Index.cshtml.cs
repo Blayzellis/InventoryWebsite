@@ -126,8 +126,10 @@ public class IndexModel : PageModel
             }
             else
             {
-                var temp = new List<ChestModel>();
-                temp.Add(item);
+                var temp = new List<ChestModel>
+                {
+                    item
+                };
                 newSet.Add(item.name, temp);
             }
         }

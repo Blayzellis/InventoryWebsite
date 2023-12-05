@@ -13,15 +13,15 @@
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    @if(IndexModel.data != null) 
+                    @if (IndexModel.data != null)
+                    {
+                        foreach (KeyValuePair<string, string?> d in IndexModel.data)
                         {
-                            foreach(KeyValuePair<string, string?> d in IndexModel.data)
-                            {
-                                bool status = Model.ChestsOnline.Contains(d.Key);
-                                string color = status ? "logged-in" : "logged-out"; 
-                                <li><a class="dropdown-item @color" asp-route-chest="@d.Key" method="post">@d.Key</a></li>
-                            }
+                            bool status = Model.ChestsOnline.Contains(d.Key);
+                            string color = status ? "logged-in" : "logged-out";
+                            <li><a class="dropdown-item @color" asp-route-chest="@d.Key" method="post">@d.Key</a></li>
                         }
+                    }
                 </ul>
             </div>
         </div>
@@ -37,12 +37,12 @@
                 <span class="logged-out">Chest Server Status: Offline</span>
             }
         </div>
-        
+
     </div>
 
-
+    <input type="text" id="myInput" onkeyup="tableSort()" placeholder="Search for items..">
     @* The table below displays the data retrieved from the API *@
-    <table style="width:100%" class="center1">
+    <table style="width:100%" class="center1" id="myTable">
 
         @* Begin render API data code block *@
         <tbody>
@@ -75,7 +75,7 @@
                         string title = $"<h6 class=\"center2\">Item | Qty</h6>";
                         string func = $"postData(\"/AddToCart/?rawId={obj.name}&origin={Model.currentChest}\")";
 
-                        <td width="10%" class="py-3 px-3 center2" data-bs-toggle="popover" data-bs-html="true"
+                        <td width="10%" class="py-3 px-3 center2" data-bs-toggle="popover" value="@obj.name.Split(':')[1]" data-bs-html="true"
                             data-bs-placement="top" data-bs-trigger="hover" data-bs-title="@title" data-bs-content="@hover">
                             @* The following div contains information to handle the edit and delete functions. *@
                             <div class="btn-group btn-group-sm" role="group">
@@ -118,6 +118,27 @@
                 };
                 xhttp.open("GET", destination, true);
                 xhttp.send();
+            }
+            function tableSort() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.getAttribute("value");
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
             }
         </script>
     }
