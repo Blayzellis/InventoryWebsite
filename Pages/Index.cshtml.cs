@@ -76,7 +76,7 @@ public class IndexModel : PageModel
         {
             if (_main.mode == WebSocketController.Mode.Ping)
             {
-                Console.WriteLine("Here2.0");
+                System.Diagnostics.Trace.WriteLine("Here2.0");
                 data[currentChest] = DoGetTask(_main);
             }
             serverStatus = true;
