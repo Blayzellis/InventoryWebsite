@@ -20,7 +20,7 @@ public class WebSocketController : ControllerBase
     public Mode mode = Mode.Ping;
     public string name = "";
     public string? result = null;
-    public string? payload = null;
+    public Queue<string?> payload = null;
     public static List<WebSocketController> PC = new List<WebSocketController>();
     [Route("/ws")]
     public async Task Get()
@@ -29,6 +29,7 @@ public class WebSocketController : ControllerBase
         {
             using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
             PC.Add(this);
+            payload = new Queue<string?>();
             mode = Mode.Ping;
             await UseSocket(webSocket);
             PC.Remove(this);
@@ -48,14 +49,12 @@ public class WebSocketController : ControllerBase
         return result;
     }
     public bool OnPost(string data) {
-        while(mode != Mode.Ping){}
-        mode = Mode.Post;
-        payload = data;
+        payload.Enqueue(data);
         return true;
     }
     private async Task UseSocket(WebSocket webSocket)
     {
-        var buffer = new byte[16000000];
+        var buffer = new byte[8000000];
         var receiveResult = await webSocket.ReceiveAsync(
             new ArraySegment<byte>(buffer), CancellationToken.None);
         name = System.Text.Encoding.Default.GetString(
@@ -97,9 +96,8 @@ public class WebSocketController : ControllerBase
     {
         try {
             var message = BitConverter.GetBytes((int) mode);
-            if(payload != null) {
-                message = Encoding.ASCII.GetBytes(payload);
-                payload = null;
+            if(payload.Count > 0) {
+                message = Encoding.ASCII.GetBytes(payload.Dequeue());
             }
             await webSocket.SendAsync(
                 new ArraySegment<byte>(message, 0, message.Length), 0 , receiveResult.EndOfMessage, CancellationToken.None);
