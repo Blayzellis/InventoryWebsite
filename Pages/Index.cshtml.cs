@@ -210,7 +210,7 @@ public class IndexModel : PageModel
                     return image;
 
             }
-            Console.WriteLine(image);
+            System.Diagnostics.Trace.WriteLine(image);
             return image;
         }
         return null;
