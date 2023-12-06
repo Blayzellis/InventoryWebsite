@@ -180,7 +180,7 @@ public class IndexModel : PageModel
                 { "start", "0"},
                 { "filter", "0"},
                 { "hl", "English"},
-                { "key", "AIzaSyAy-Docg5DJZwQKSTURjER5LeZaPSZduU0" }
+                { "key", Environment.GetEnvironmentVariable("GOOGLE_API_KEY") }
             };
         var dictFormUrlEncoded = new FormUrlEncodedContent(queryParameters);
         var req = await dictFormUrlEncoded.ReadAsStringAsync();
