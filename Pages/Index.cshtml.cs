@@ -16,11 +16,13 @@ public class IndexModel : PageModel
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IHttpContextAccessor _httpContext;
+    private readonly ILogger<PrivacyModel> logger;
 
-    public IndexModel(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContext)
+    public IndexModel(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContext, ILogger<PrivacyModel> _logger)
     {
         _httpClientFactory = httpClientFactory;
         _httpContext = httpContext;
+        logger = _logger;
     }
 
     public bool serverStatus = false;
@@ -76,7 +78,7 @@ public class IndexModel : PageModel
         {
             if (_main.mode == WebSocketController.Mode.Ping)
             {
-                System.Diagnostics.Trace.WriteLine("Here2.0");
+                logger.LogInformation("Here2.0");
                 data[currentChest] = DoGetTask(_main);
             }
             serverStatus = true;
@@ -210,7 +212,7 @@ public class IndexModel : PageModel
                     return image;
 
             }
-            System.Diagnostics.Trace.WriteLine(image);
+            logger.LogInformation(image);
             return image;
         }
         return null;
