@@ -10,7 +10,8 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddDbContext<ProductContext>(opt => opt.UseInMemoryDatabase("InventoryWebsite"));
-
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddHttpClient("GoogleImages", httpClient =>
@@ -19,7 +20,6 @@ builder.Services.AddHttpClient("GoogleImages", httpClient =>
  });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddLogging();
 
 builder.Services.AddSession(options =>
 {

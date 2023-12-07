@@ -36,7 +36,7 @@ public class IndexModel : PageModel
     [BindProperty]
     public List<string>? ChestsOnline { get; set; }
     [BindProperty]
-    public string currentChest { get; set; }
+    public string? currentChest { get; set; }
 
     public async Task OnGetAsync(string chest = "main")
     {
