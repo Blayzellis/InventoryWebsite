@@ -19,6 +19,7 @@ builder.Services.AddHttpClient("GoogleImages", httpClient =>
  });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddLogging();
 
 builder.Services.AddSession(options =>
 {

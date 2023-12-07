@@ -16,9 +16,9 @@ public class IndexModel : PageModel
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IHttpContextAccessor _httpContext;
-    private readonly ILogger<PrivacyModel> logger;
+    private readonly ILogger<IndexModel> logger;
 
-    public IndexModel(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContext, ILogger<PrivacyModel> _logger)
+    public IndexModel(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContext, ILogger<IndexModel> _logger)
     {
         _httpClientFactory = httpClientFactory;
         _httpContext = httpContext;
