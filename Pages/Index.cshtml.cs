@@ -142,7 +142,7 @@ public class IndexModel : PageModel
     public async Task GetImage()
     {
         bool changes = false;
-        _dict ??= await Load(@"Urls.json");
+        _dict ??= await Load(@"/mounts/files/myDirectory/Urls.json");
         if (ItemSets is null)
             return;
         foreach (List<ChestModel> list in ItemSets.Values)
@@ -165,7 +165,7 @@ public class IndexModel : PageModel
         }
         if (changes)
         {
-            await Save(@"Urls.json", _dict);
+            await Save(@"/mounts/files/myDirectory/Urls.json", _dict);
         }
     }
 
