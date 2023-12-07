@@ -62,6 +62,7 @@ public class IndexModel : PageModel
 
     public async Task PageLoad(string chest)
     {
+        logger.LogInformation("HereFinally!");
         WebSocketController _main = null;
         if(!data.ContainsKey(currentChest)) {
             data.Add(currentChest, null);
