@@ -15,7 +15,7 @@ rednet.open("top")
 while(redstone.getInput("left")) do
     local ws, err = assert(http.websocket("wss://chestapp.azurewebsites.net/ws"))
     if(not ws) then print(err) else print("Success") end
-    ws.send(setPlayer)
+    ws.send(setPlayer())
     while(ws and redstone.getInput("left")) do
         local reply, binary = ws.receive(5)
         replyb = string.byte(reply)

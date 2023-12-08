@@ -17,6 +17,6 @@ end --close the function
 if(arg[1] == nil) then
     print("Specify name of chest!")
 else
-    input = "function setPlayer\n\tlocal player = " .. arg[1] .. "\n\treturn player\nend\n"
+    input = "function setPlayer ()\n\tlocal player = \"" .. arg[1] .. "\"\n\treturn player\nend\n"
     get("Websocket.lua","startup") --remember the quotation marks! (" ")
 end
