@@ -83,7 +83,9 @@ namespace InventoryWebsite.Pages
             }
             await Task.WhenAll(tasks);
             ClearCart();
-            WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
+            if(WebSocketController._main is not null) {
+                WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
+            }
             return Redirect($"Index?chest={lastOrigin}");
         }
         public async Task SendRequest(Data items, string origin)
