@@ -1,9 +1,10 @@
 function listPlayer (player)
     local i = 1
     local list = {}
+    players = GetPlayers()
     SetPlayer(player)
     local inv = invManager.getItems()
-    for slot, item in pairs(inv.list()) do
+    for slot, item in pairs(inv) do
         list[i] = {name = item.name, count = item.count, slot = slot}
         i = i + 1
     end
@@ -26,6 +27,17 @@ end
 function RemovePlayer ()
     turtle.suck()
 end
+function GetPlayers ()
+    playerList = {}
+    for i = 1, 16 do
+        local slot = turtle.getItemDetail(i, true)
+        if slot then
+            local name = slot.displayName
+            playerList[name] = i
+        end
+    end
+    return playerList
+end
 
 function broadCast(payload)
     
@@ -37,11 +49,12 @@ invManager = peripheral.find("inventoryManager")
 --local inv = peripheral.find("inventory")
 --chestData = listChest(inv)
 --rednet.open("top")
-while(redstone.getInput("left")) do
+players = GetPlayers()
+while(true) do
     local ws, err = assert(http.websocket("wss://chestapp.azurewebsites.net/ws"))
     if(not ws) then print(err) else print("Success") end
     ws.send("Main")
-    while(ws and redstone.getInput("left")) do
+    while(ws) do
         local reply, binary = ws.receive(10)
         replyb = string.byte(reply)
         if(replyb) then print("Reply: " .. replyb) else print("Null") end

@@ -73,7 +73,9 @@ namespace InventoryWebsite.Pages
 
             if(data[currentPlayer] is not null) {
                 ItemSets = SetModel(JsonSerializer.Deserialize<IEnumerable<ChestModel>>(data[currentPlayer]));
+                await GetImage();
             }
+
         }
 
         public string DoGetTask(WebSocketController main, string? player = null)
