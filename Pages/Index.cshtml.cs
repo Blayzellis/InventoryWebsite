@@ -46,15 +46,13 @@ public class IndexModel : PageModel
         currentChest = chest;
         ChestsOnline = new List<string>();
         GetChests();
-        await PageLoad(chest);
+        await PageLoad();
     }
 
     public void GetChests()
     {
         foreach (WebSocketController wsc in WebSocketController.PC)
         {
-            if(wsc.name == "Main")
-                continue;
             ChestsOnline.Add(wsc.name);
             if(!data.ContainsKey(wsc.name)) {
             data.Add(wsc.name, null);
@@ -62,9 +60,9 @@ public class IndexModel : PageModel
         }
     }
 
-    public async Task PageLoad(string chest)
+    public async Task PageLoad()
     {
-        logger.LogInformation("HereFinally!");
+        //logger.LogInformation("HereFinally!");
         WebSocketController _main = null;
         if(!data.ContainsKey(currentChest)) {
             data.Add(currentChest, null);

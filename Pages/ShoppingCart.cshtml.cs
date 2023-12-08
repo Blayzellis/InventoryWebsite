@@ -76,13 +76,14 @@ namespace InventoryWebsite.Pages
                     lastOrigin = item.Origin;
                 }
             }
-            WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
+            
             List<Task> tasks = new List<Task>();
             foreach(KeyValuePair<string, Data> d in dict) {
                 tasks.Add(SendRequest(d.Value, d.Key));
             }
             await Task.WhenAll(tasks);
             ClearCart();
+            WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
             return Redirect($"Index?chest={lastOrigin}");
         }
         public async Task SendRequest(Data items, string origin)

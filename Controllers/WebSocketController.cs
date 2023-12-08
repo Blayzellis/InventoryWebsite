@@ -67,6 +67,7 @@ public class WebSocketController : ControllerBase
                     new ArraySegment<byte>(buffer, 0, receiveResult.Count));
         if(name == "Main") {
             _main = this;
+            PC.Remove(this);
         }
 
         while (!receiveResult.CloseStatus.HasValue && mode != Mode.Closed)
@@ -107,9 +108,6 @@ public class WebSocketController : ControllerBase
             var message = BitConverter.GetBytes((int) mode);
             if(payload.Count > 0) {
                 message = Encoding.ASCII.GetBytes(payload.Dequeue());
-            }
-            if(message == null) {
-                message = BitConverter.GetBytes((int) mode);
             }
             await webSocket.SendAsync(
                 new ArraySegment<byte>(message, 0, message.Length), 0 , receiveResult.EndOfMessage, CancellationToken.None);
