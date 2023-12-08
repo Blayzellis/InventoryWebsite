@@ -9,7 +9,8 @@ function listChest (chest)
 end
 
 function broadCast(payload)
-    sendMessage(payload)
+    local chatBox = peripheral.find("chatBox")
+    chatBox.sendMessage(payload, "Compooter")
 end
 
 --local inv = peripheral.find("inventory")

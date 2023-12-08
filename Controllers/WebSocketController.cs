@@ -108,6 +108,9 @@ public class WebSocketController : ControllerBase
             if(payload.Count > 0) {
                 message = Encoding.ASCII.GetBytes(payload.Dequeue());
             }
+            if(message == null) {
+                message = BitConverter.GetBytes((int) mode);
+            }
             await webSocket.SendAsync(
                 new ArraySegment<byte>(message, 0, message.Length), 0 , receiveResult.EndOfMessage, CancellationToken.None);
 
