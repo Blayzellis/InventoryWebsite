@@ -48,6 +48,9 @@ public class WebSocketController : ControllerBase
     }
     public async Task<string> OnGet() 
     {
+        while(mode == Mode.Post){
+            await Task.Delay(25);
+        }
         mode = Mode.Get;
         while(mode == Mode.Get){
             await Task.Delay(25);
@@ -55,6 +58,7 @@ public class WebSocketController : ControllerBase
         return result;
     }
     public bool OnPost(string data) {
+        mode = Mode.Post;
         payload.Enqueue(data);
         return true;
     }
@@ -83,8 +87,7 @@ public class WebSocketController : ControllerBase
                     new ArraySegment<byte>(buffer, 0, receiveResult.Count));
                 mode = Mode.Ping;
             }
-            else if(mode == Mode.Post) 
-            {
+            else if(mode == Mode.Post) {
                 receiveResult = await PingMode(webSocket, receiveResult, buffer);
                 mode = Mode.Ping;
             }

@@ -77,7 +77,7 @@ public class IndexModel : PageModel
         }
         if (_main is not null)
         {
-            if (_main.mode == WebSocketController.Mode.Ping)
+            if (_main.mode == WebSocketController.Mode.Ping || _main.mode == WebSocketController.Mode.Post)
             {
                 logger.LogInformation("Here2.0");
                 data[currentChest] = DoGetTask(_main);
