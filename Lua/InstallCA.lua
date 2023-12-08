@@ -14,9 +14,9 @@ local function get(repoFile,saveTo)
       end --end the if
 end --close the function
 
-if(arr[1] is nil) then
+if(arg[1] == nil) then
     print("Specify name of chest!")
-    shell.exit()
+else
+    input = "function setPlayer\n\tlocal player = " .. arg[1] .. "\n\treturn player\nend\n"
+    get("Websocket.lua","startup") --remember the quotation marks! (" ")
 end
-input = "player = " .. arr[1] .. "\n"
-get("Websocket.lua","startup") --remember the quotation marks! (" ")
