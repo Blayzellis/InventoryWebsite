@@ -53,6 +53,8 @@ public class IndexModel : PageModel
     {
         foreach (WebSocketController wsc in WebSocketController.PC)
         {
+            if(wsc.name == "Main")
+                continue;
             ChestsOnline.Add(wsc.name);
             if(!data.ContainsKey(wsc.name)) {
             data.Add(wsc.name, null);

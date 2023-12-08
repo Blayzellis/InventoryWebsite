@@ -61,6 +61,7 @@ namespace InventoryWebsite.Pages
             MyCart = GetShoppingCartItems();
             Dictionary<string, Data> dict = new Dictionary<string, Data>();
             int count = 0;
+            string lastOrigin = "";
             foreach (CartItem item in MyCart)
             {
                 Item temp = new Item(item.ProductId, item.Quantity);
@@ -72,6 +73,7 @@ namespace InventoryWebsite.Pages
                     var data = new Data(player);
                     data.Items.Add(temp);
                     dict[item.Origin] = data;
+                    lastOrigin = item.Origin;
                 }
             }
             WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
@@ -81,7 +83,7 @@ namespace InventoryWebsite.Pages
             }
             await Task.WhenAll(tasks);
             ClearCart();
-            return Redirect("Index");
+            return Redirect($"Index?chest={lastOrigin}");
         }
         public async Task SendRequest(Data items, string origin)
         {

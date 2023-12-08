@@ -8,14 +8,17 @@ function listChest (chest)
     return list
 end
 
+function broadCast(payload)
+    sendMessage(payload)
+end
 
-local inv = peripheral.find("inventory")
-chestData = listChest(inv)
-rednet.open("top")
+--local inv = peripheral.find("inventory")
+--chestData = listChest(inv)
+--rednet.open("top")
 while(redstone.getInput("left")) do
     local ws, err = assert(http.websocket("wss://chestapp.azurewebsites.net/ws"))
     if(not ws) then print(err) else print("Success") end
-    ws.send("Blayze")
+    ws.send("Main")
     while(ws and redstone.getInput("left")) do
         local reply, binary = ws.receive(5)
         replyb = string.byte(reply)
@@ -24,10 +27,10 @@ while(redstone.getInput("left")) do
         if(replyb == 0 or replyb == 2) then
             ws.send(0, true)
         elseif(replyb == 1) then
-            ws.send(textutils.serialiseJSON(listChest(inv)))
+            --ws.send(textutils.serialiseJSON(listChest(inv)))
         else
             ws.send(0, true)
-            rednet.broadcast(reply, "main")
+            broadCast(reply);
         end
     end
     if(ws) then ws.close() end
