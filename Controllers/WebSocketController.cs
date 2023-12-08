@@ -34,6 +34,9 @@ public class WebSocketController : ControllerBase
             mode = Mode.Ping;
             await UseSocket(webSocket);
             PC.Remove(this);
+            if(this.name == "Main") {
+                _main = null;
+            }
         }
         else
         {
@@ -46,10 +49,13 @@ public class WebSocketController : ControllerBase
             _main.payload.Enqueue(message);
         }
     }
-    public async Task<string> OnGet() 
+    public async Task<string> OnGet(string? player = null) 
     {
         while(mode == Mode.Post){
             await Task.Delay(25);
+        }
+        if(player is not null) {
+            _main.payload.Enqueue(player);
         }
         mode = Mode.Get;
         while(mode == Mode.Get){

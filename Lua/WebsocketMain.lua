@@ -1,18 +1,39 @@
-function listChest (chest)
+function listPlayer (player)
     local i = 1
     local list = {}
-    for slot, item in pairs(chest.list()) do
+    SetPlayer(player)
+    local inv = invManager.getItems()
+    for slot, item in pairs(inv.list()) do
         list[i] = {name = item.name, count = item.count, slot = slot}
         i = i + 1
     end
+    RemovePlayer();
     return list
 end
 
+function SetPlayer (player)
+    local slot = players[player]
+    if(slot) then
+        turtle.select(slot)
+        turtle.drop()
+    else
+        print("Error ", player, " is not in the system")
+        return false
+    end
+    return true
+end
+
+function RemovePlayer ()
+    turtle.suck()
+end
+
 function broadCast(payload)
-    local chatBox = peripheral.find("chatBox")
+    
     chatBox.sendMessage(payload, "Compooter")
 end
 
+chatBox = peripheral.find("chatBox")
+invManager = peripheral.find("inventoryManager")
 --local inv = peripheral.find("inventory")
 --chestData = listChest(inv)
 --rednet.open("top")
@@ -21,7 +42,7 @@ while(redstone.getInput("left")) do
     if(not ws) then print(err) else print("Success") end
     ws.send("Main")
     while(ws and redstone.getInput("left")) do
-        local reply, binary = ws.receive(5)
+        local reply, binary = ws.receive(10)
         replyb = string.byte(reply)
         if(replyb) then print("Reply: " .. replyb) else print("Null") end
         os.sleep(2)
@@ -30,8 +51,9 @@ while(redstone.getInput("left")) do
         elseif(replyb == 1) then
             --ws.send(textutils.serialiseJSON(listChest(inv)))
         else
-            ws.send(0, true)
-            broadCast(reply);
+            --=broadCast(reply);
+            ws.send(textutils.serialiseJSON(listPlayer(reply)))
+            
         end
     end
     if(ws) then ws.close() end

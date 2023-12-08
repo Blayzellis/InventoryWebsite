@@ -17,7 +17,7 @@ while(redstone.getInput("left")) do
     if(not ws) then print(err) else print("Success") end
     ws.send(setPlayer())
     while(ws and redstone.getInput("left")) do
-        local reply, binary = ws.receive(5)
+        local reply, binary = ws.receive(10)
         replyb = string.byte(reply)
         if(replyb) then print("Reply: " .. replyb) else print("Null") end
         os.sleep(2)

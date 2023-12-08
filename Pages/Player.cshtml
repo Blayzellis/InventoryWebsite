@@ -1,0 +1,113 @@
+﻿@page
+@model PlayerModel
+@{
+}
+<div class="container">
+    
+
+    <input type="text" id="myInput" onkeyup="tableSort()" placeholder="Search for items..">
+    @* The table below displays the data retrieved from the API *@
+    <table style="width:100%" class="center1" id="myTable">
+
+        @* Begin render API data code block *@
+        <tbody>
+            @* The Razor keyword @foreach is used to iterate through the
+            data returned to the data model from the HTTP operations. *@
+            @if (Model.ItemSets != null)
+            {
+                {
+                    int i = 1;
+                    bool open = false;
+                    foreach (var list in Model.ItemSets.Values)
+                    {
+                        if (list.Count == 0)
+                        {
+                            continue;
+                        }
+                        int qty = 0;
+                        var obj = list[0];
+                        foreach (var item in list)
+                        {
+                            qty += item.count;
+                        }
+                        if (i % 10 == 1)
+                        {
+                            @Html.Raw("<tr>")
+                            open = true;
+                        }
+
+                        string hover = $"{obj.name.Split(':')[1].Replace('_', ' ')} {qty}";
+                        string title = $"<h6 class=\"center2\">Item | Qty</h6>";
+                        string func = $"postData(\"/AddToCart/?rawId={obj.name}&origin={Model.currentPlayer}\")";
+
+                        <td width="10%" class="py-3 px-3 center2" data-bs-toggle="popover" value="@obj.name.Split(':')[1]" data-bs-html="true"
+                            data-bs-placement="top" data-bs-trigger="hover" data-bs-title="@title" data-bs-content="@hover">
+                            @* The following div contains information to handle the edit and delete functions. *@
+                            <div class="btn-group btn-group-sm" role="group">
+                                @* Routes to the Edit page and passes the id of the record. *@
+
+                                <button type="button" class="btn btn-outline-light py-2 px-2" onclick="@func">
+                                    <img src=@obj.Url alt=@obj.name loading="lazy" style="width:58px;height:58px;">
+                                </button>
+                            </div>
+                        </td>
+                        if (i % 10 == 0)
+                        {
+                            @Html.Raw("</tr>")
+                            open = false;
+                        }
+                        i++;
+                    }
+                    if (open)
+                    {
+                        @Html.Raw("</tr>")
+                    }
+                }
+            }
+        </tbody>
+        @* End render API data code block *@
+    </table>
+    @section scripts {
+        <script>
+            function postData(destination) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("CartComponent").innerHTML = this.responseText;
+                        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                            keyboard: true,
+                            focus: true
+                        });
+                        myModal.toggle();
+                    }
+                };
+                xhttp.open("GET", destination, true);
+                xhttp.send();
+            }
+            function tableSort() {
+                // Declare variables
+                var input, filter, table, tr, td, tds, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    tds = tr[i].getElementsByTagName("td");
+                    for (j = 0; j < tds.length; j++) {
+                        td = tds[j];
+                        if (td) {
+                            txtValue = td.getAttribute("value");
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                td.style.display = "";
+                            } else {
+                                td.style.display = "none";
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+    }
+</div>
