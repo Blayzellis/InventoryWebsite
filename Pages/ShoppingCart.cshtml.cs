@@ -60,10 +60,11 @@ namespace InventoryWebsite.Pages
         {
             MyCart = GetShoppingCartItems();
             Dictionary<string, Data> dict = new Dictionary<string, Data>();
+            int count = 0;
             foreach (CartItem item in MyCart)
             {
                 Item temp = new Item(item.ProductId, item.Quantity);
-                Console.WriteLine(temp);
+                count += temp.Qty;
                 if(dict.ContainsKey(item.Origin)) {
                     dict[item.Origin].Items.Add(temp);
                 }
@@ -73,6 +74,7 @@ namespace InventoryWebsite.Pages
                     dict[item.Origin] = data;
                 }
             }
+            WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
             List<Task> tasks = new List<Task>();
             foreach(KeyValuePair<string, Data> d in dict) {
                 tasks.Add(SendRequest(d.Value, d.Key));

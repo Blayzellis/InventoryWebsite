@@ -8,6 +8,10 @@ function listChest (chest)
     return list
 end
 
+function broadCast(payload)
+    sendMessage(payload)
+end
+
 local inv = peripheral.find("inventory")
 chestData = listChest(inv)
 rednet.open("top")
@@ -26,7 +30,7 @@ while(redstone.getInput("left")) do
             ws.send(textutils.serialiseJSON(listChest(inv)))
         else
             ws.send(0, true)
-            rednet.broadcast(reply, "main")
+            broadCast(reply);
         end
     end
     if(ws) then ws.close() end

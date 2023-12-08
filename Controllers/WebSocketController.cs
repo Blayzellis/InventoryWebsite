@@ -22,6 +22,7 @@ public class WebSocketController : ControllerBase
     public string? result = null;
     public Queue<string?> payload = null;
     public static List<WebSocketController> PC = new List<WebSocketController>();
+    public static WebSocketController _main = null;
     [Route("/ws")]
     public async Task Get()
     {
@@ -40,6 +41,11 @@ public class WebSocketController : ControllerBase
         }
     }
     #endregion
+    public void SendMessage(string message) {
+        if(_main is not null) {
+            _main.payload.Enqueue(message);
+        }
+    }
     public async Task<string> OnGet() 
     {
         mode = Mode.Get;
@@ -59,6 +65,9 @@ public class WebSocketController : ControllerBase
             new ArraySegment<byte>(buffer), CancellationToken.None);
         name = System.Text.Encoding.Default.GetString(
                     new ArraySegment<byte>(buffer, 0, receiveResult.Count));
+        if(name == "Main") {
+            _main = this;
+        }
 
         while (!receiveResult.CloseStatus.HasValue && mode != Mode.Closed)
         {
