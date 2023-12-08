@@ -38,7 +38,7 @@ public class IndexModel : PageModel
     [BindProperty]
     public string? currentChest { get; set; }
 
-    public async Task OnGetAsync(string chest = "main")
+    public async Task OnGetAsync(string chest = "Blayze")
     {
         if(data is null) {
             data = new Dictionary<string, string?>();
