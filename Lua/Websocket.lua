@@ -12,11 +12,11 @@ end
 local inv = peripheral.find("inventory")
 chestData = listChest(inv)
 rednet.open("top")
-while(redstone.getInput("left")) do
+while(redstone.getInput("left") or redstone.getInput("right")) do
     local ws, err = assert(http.websocket("wss://chestapp.azurewebsites.net/ws"))
     if(not ws) then print(err) else print("Success") end
     ws.send(setPlayer())
-    while(ws and redstone.getInput("left")) do
+    while(ws and (redstone.getInput("left") or redstone.getInput("right"))) do
         local reply, binary = ws.receive(10)
         replyb = string.byte(reply)
         if(replyb) then print("Reply: " .. replyb) else print("Null") end

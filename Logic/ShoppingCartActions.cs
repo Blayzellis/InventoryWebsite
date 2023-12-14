@@ -21,7 +21,7 @@ namespace InventoryWebsite.Logic
 
     public const string CartSessionKey = "CartId";
 
-    public void AddToCart(string id, string origin = "main")
+    public void AddToCart(string id, bool direction, string origin = "main")
     {
       // Retrieve the product from the database.           
       ShoppingCartId = GetCartId();
@@ -41,7 +41,8 @@ namespace InventoryWebsite.Logic
           //p => p.ProductID == id),
           Quantity = 1,
           ProductId = id,
-          Origin = origin
+          Origin = origin,
+          Direction = direction
         };
 
         _db.ShoppingCartItems.Add(cartItem);

@@ -38,7 +38,7 @@
 
                         string hover = $"{obj.name.Split(':')[1].Replace('_', ' ')} {qty}";
                         string title = $"<h6 class=\"center2\">Item | Qty</h6>";
-                        string func = $"postData(\"/AddToCart/?rawId={obj.name}&origin={Model.currentPlayer}\")";
+                        string func = $"postData(\"/AddToCart/?rawId={obj.name}&origin={Model.currentPlayer}&dir=false\")";
 
                         <td width="10%" class="py-3 px-3 center2" data-bs-toggle="popover" value="@obj.name.Split(':')[1]" data-bs-html="true"
                             data-bs-placement="top" data-bs-trigger="hover" data-bs-title="@title" data-bs-content="@hover">

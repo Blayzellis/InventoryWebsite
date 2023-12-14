@@ -12,9 +12,9 @@ namespace InventoryWebsite.Pages
         {
             _httpContext = httpContext;
         }
-        public void OnGet(string rawId, string origin)
+        public void OnGet(string rawId, string origin, bool dir = true)
         {
-            AddToCart(rawId, origin);
+            AddToCart(rawId, origin, dir);
             //return Redirect("Index");
         }
         public async Task<IActionResult> OnPostEditAsync(string[] Id, int[] amount)
@@ -26,14 +26,14 @@ namespace InventoryWebsite.Pages
             return Redirect("ShoppingCart");
         }
 
-        public void AddToCart(string rawId, string origin)
+        public void AddToCart(string rawId, string origin, bool direction)
         {
             int productId;
             if (!String.IsNullOrEmpty(rawId)) //&& int.TryParse(rawId, out productId)
             {
                 using (ShoppingCartActions usersShoppingCart = new ShoppingCartActions(_httpContext))
                 {
-                    usersShoppingCart.AddToCart(rawId, origin); //Convert.ToInt16(rawId)
+                    usersShoppingCart.AddToCart(rawId, direction, origin); //Convert.ToInt16(rawId)
                 }
 
             }

@@ -13,10 +13,13 @@ namespace InventoryWebsite.Pages
     {
         public string Player { get; set; }
         public List<Item> Items { get; set; }
-        public Data(string name)
+
+        public bool Direction { get; set; }
+        public Data(string name, bool dir)
         {
             Player = name;
             Items = new List<Item>();
+            Direction = dir;
         }
     }
     public class Item
@@ -56,12 +59,14 @@ namespace InventoryWebsite.Pages
             ShoppingCartActions actions = new ShoppingCartActions(_httpContext);
             actions.EmptyCart();
         }
-        public async Task<IActionResult> OnPost(string player = "Blayze")
+
+        //Sends serialized data to Websocket server
+        public async Task<IActionResult> OnPost(string player = "Blayze", string chest = "Null")
         {
             MyCart = GetShoppingCartItems();
             Dictionary<string, Data> dict = new Dictionary<string, Data>();
             int count = 0;
-            string lastOrigin = "";
+            //string lastOrigin = "";
             foreach (CartItem item in MyCart)
             {
                 Item temp = new Item(item.ProductId, item.Quantity);
@@ -70,23 +75,29 @@ namespace InventoryWebsite.Pages
                     dict[item.Origin].Items.Add(temp);
                 }
                 else {
-                    var data = new Data(player);
+                    var data = item.Direction ? 
+                        new Data(player, item.Direction) : new Data(item.Origin, item.Direction);
                     data.Items.Add(temp);
                     dict[item.Origin] = data;
-                    lastOrigin = item.Origin;
+                    //lastOrigin = item.Origin;
                 }
             }
             
             List<Task> tasks = new List<Task>();
             foreach(KeyValuePair<string, Data> d in dict) {
-                tasks.Add(SendRequest(d.Value, d.Key));
+                if(d.Value.Direction) {
+                    tasks.Add(SendRequest(d.Value, d.Key));
+                }
+                else {
+                    tasks.Add(SendRequest(d.Value, chest));
+                }
             }
             await Task.WhenAll(tasks);
             ClearCart();
             if(WebSocketController._main is not null) {
                 WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
             }
-            return Redirect($"Index?chest={lastOrigin}");
+            return Redirect($"Index");
         }
         public async Task SendRequest(Data items, string origin)
         {

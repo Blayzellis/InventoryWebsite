@@ -28,7 +28,10 @@ end
 
 function StartProcess (list)
     if(SetPlayer(list.Player)) then
-        GiveItems(list.Items)
+        if(list.Direction) then
+            GiveItems(list.Items)
+        else
+            StoreItems(list.Items)
         RemovePlayer()
     end
 end
@@ -38,6 +41,15 @@ function GiveItems(items)
     for i, item in pairs(items) do
         --print(item.Qty, item.Name)
         manager.addItemToPlayer("left", item.Qty, nil, item.Name)
+        
+    end
+end
+
+function StoreItems(items)
+    local manager = peripheral.find("inventoryManager")
+    for i, item in pairs(items) do
+        --print(item.Qty, item.Name)
+        manager.removeItemFromPlayer("left", item.Qty, nil, item.Name)
         
     end
 end
