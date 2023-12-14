@@ -95,7 +95,7 @@ namespace InventoryWebsite.Pages
             await Task.WhenAll(tasks);
             ClearCart();
             if(WebSocketController._main is not null) {
-                WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
+                //WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
             }
             return Redirect($"Index");
         }

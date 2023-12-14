@@ -32,6 +32,7 @@ function StartProcess (list)
             GiveItems(list.Items)
         else
             StoreItems(list.Items)
+        end
         RemovePlayer()
     end
 end
