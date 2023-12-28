@@ -37,6 +37,7 @@ namespace InventoryWebsite.Pages
 
         private readonly IHttpContextAccessor _httpContext;
         public static bool serverStatus = true;
+        public string lastOrigin = "";
         public ShoppingCartModel(IHttpContextAccessor httpContext)
         {
             _httpContext = httpContext;
@@ -66,7 +67,6 @@ namespace InventoryWebsite.Pages
             MyCart = GetShoppingCartItems();
             Dictionary<string, Data> dict = new Dictionary<string, Data>();
             int count = 0;
-            //string lastOrigin = "";
             foreach (CartItem item in MyCart)
             {
                 Item temp = new Item(item.ProductId, item.Quantity);
@@ -79,7 +79,7 @@ namespace InventoryWebsite.Pages
                         new Data(player, item.Direction) : new Data(item.Origin, item.Direction);
                     data.Items.Add(temp);
                     dict[item.Origin] = data;
-                    //lastOrigin = item.Origin;
+                    lastOrigin = item.Direction ? $"Index/?chest={item.Origin}" : $"Player/?player={item.Origin}";
                 }
             }
             
@@ -97,7 +97,7 @@ namespace InventoryWebsite.Pages
             if(WebSocketController._main is not null) {
                 //WebSocketController._main.SendMessage($"Sent {count} item/s to {player}");
             }
-            return Redirect($"Index");
+            return Redirect(lastOrigin);
         }
         public async Task SendRequest(Data items, string origin)
         {
