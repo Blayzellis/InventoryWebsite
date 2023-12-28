@@ -46,6 +46,7 @@ end
 
 chatBox = peripheral.find("chatBox")
 invManager = peripheral.find("inventoryManager")
+turtle.suck()
 --local inv = peripheral.find("inventory")
 --chestData = listChest(inv)
 --rednet.open("top")

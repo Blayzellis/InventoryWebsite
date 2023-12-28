@@ -58,6 +58,7 @@ end
 peripheral.find("modem", rednet.open)
 run = true
 players = GetPlayers()
+turtle.suck()
 while(run) do
     local id, message
     repeat

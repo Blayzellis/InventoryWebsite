@@ -9,7 +9,7 @@ function listChest (chest)
 end
 
 
-local inv = peripheral.find("inventory")
+local inv = peripheral.find("sophisticatedstorage:controller")
 chestData = listChest(inv)
 rednet.open("top")
 while(redstone.getInput("left") or redstone.getInput("right")) do

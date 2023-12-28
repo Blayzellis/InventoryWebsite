@@ -17,11 +17,11 @@
                     <ul>
                         @foreach (var obj in Model)
                         {
-
+                            string color = obj.Direction ? "logged-in" : "logged-out";
                             string itemInCart = $"{obj.ProductId.Split(':')[1].Replace('_', ' ')} ";
                             <div class="d-flex flex-row">
                                 <div class="d-flex justify-content-start">
-                                    <b>@itemInCart</b>
+                                    <b class = "@color">@itemInCart</b>
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <input type="hidden" id="Id" name="Id" value="@obj.ProductId">
