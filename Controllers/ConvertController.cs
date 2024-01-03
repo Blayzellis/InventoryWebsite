@@ -11,7 +11,7 @@ namespace InventoryWebsite.Controllers;
 [ApiController]
 public class ConvertController : ControllerBase
 {
-    Dictionary<string, Task> downloads = new Dictionary<string, Task>();
+    static Dictionary<string, Task> downloads = new Dictionary<string, Task>();
     [HttpGet("{Url}")]
     public async Task<ActionResult> GetTodoItem(string Url)
     {
@@ -20,11 +20,13 @@ public class ConvertController : ControllerBase
         bool ongoing = downloads.ContainsKey(Url);
         //Check Task ongoing
         if(ongoing) {
+            Console.WriteLine("Here");
             if(downloads[Url].IsCompleted) {
                 downloads.Remove(Url);
             }
             else {
-                return StatusCode(102); //NotDone
+                Console.WriteLine("????");
+                return NoContent(); //NotDone
             }
             
         }
@@ -35,7 +37,7 @@ public class ConvertController : ControllerBase
             return Accepted();
         }
         Stream file = new FileStream(path, FileMode.Open);
-        return File(file, "application/octet-stream", $@"{{{Url}.dfpwm}}");
+        return File(file, "audio/dfpwm", $"{Url}.dfpwm");
     }
 
 
