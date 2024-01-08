@@ -55,12 +55,14 @@ public class ConvertController : ControllerBase
             video = videoInfos.First(i => i.Resolution == videoInfos.Min(j => j.Resolution));
             path += url + ".dfpwm"; //video.Title.Trim()
         }
-        //byte[] bytes = await video.GetBytesAsync();
+        byte[] bytes = await video.GetBytesAsync();
+        MemoryStream stream = new MemoryStream();
+        stream.Write(bytes, 0, bytes.Length);
         await using (var audioOutputStream = System.IO.File.Open(path, FileMode.Create))
         {
             Console.WriteLine("Converting");
             await FFMpegArguments
-                .FromPipeInput(new StreamPipeSource(await video.StreamAsync()))
+                .FromPipeInput(new StreamPipeSource(stream))
                 .OutputToPipe(new StreamPipeSink(audioOutputStream), options =>
                     options.ForceFormat("dfpwm")
                     .WithAudioBitrate(48)
