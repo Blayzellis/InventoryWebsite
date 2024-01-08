@@ -65,17 +65,17 @@ public class ConvertController : ControllerBase
         byte[] bytes = await video.GetBytesAsync();
         this.logger.LogError($"{bytes.Length}");
         MemoryStream stream = new MemoryStream();
-        stream.Write(bytes, 0, bytes.Length);
+        //stream.Write(bytes, 0, bytes.Length);
         await using (var audioOutputStream = System.IO.File.Open(path, FileMode.Create))
         {
             Console.WriteLine("Converting");
-            await FFMpegArguments
+            FFMpegArguments
                 .FromPipeInput(new StreamPipeSource(stream))
                 .OutputToPipe(new StreamPipeSink(audioOutputStream), options =>
                     options.ForceFormat("dfpwm")
                     .WithAudioBitrate(48)
                     .WithCustomArgument("-ac 1"))
-                .ProcessAsynchronously();
+                .ProcessSynchronously();
         }
 
 
