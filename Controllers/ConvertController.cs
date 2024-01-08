@@ -11,7 +11,7 @@ namespace InventoryWebsite.Controllers;
 [ApiController]
 public class ConvertController : ControllerBase
 {
-    static Dictionary<string, Task> downloads = new Dictionary<string, Task>();
+    public Dictionary<string, Task> downloads = new Dictionary<string, Task>();
     [HttpGet("{Url}")]
     public async Task<ActionResult> GetTodoItem(string Url)
     {
@@ -36,8 +36,8 @@ public class ConvertController : ControllerBase
             downloads.Add(Url, temp);
             return Accepted();
         }
-        //Stream file = new FileStream(path, FileMode.Open);
-        return File(path, "audio/dfpwm", $"{Url}.dfpwm");
+        Stream file = new FileStream(path, FileMode.Open);
+        return File(file, "audio/dfpwm", $"{Url}.dfpwm");
     }
 
 

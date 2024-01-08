@@ -14,12 +14,19 @@ local dfpwm = require("cc.audio.dfpwm")
 local speakers = { peripheral.find("speaker") }
 local volume = 50
 local decoder = dfpwm.make_decoder()
-local song = "Song"
-local link = mysplit(arg[1], "v=")[2]
+print("Please paste a youtube link:")
+local input = io.read()
+local link = mysplit(input, "v=")[2]
+print(link)
 local fileDownload, reason = http.get("https://chestapp.azurewebsites.net/Music/convert/" .. link, nil, true)
-local code = fileDownload.
-while(code = "")do
-
+print(reason)
+local code = fileDownload.getResponseCode()
+while(code ~= "200 OK")do
+  print(code)
+  os.sleep(3)
+  print("Downloading. . .")
+  fileDownload, reason = http.get("https://chestapp.azurewebsites.net/Music/convert/" .. link, nil, true)
+  code = fileDownload.getResponseCode()
 end
 
 local data = fileDownload.readAll()
