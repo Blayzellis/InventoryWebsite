@@ -13,7 +13,7 @@ end
 local dfpwm = require("cc.audio.dfpwm")
 local speakers = { peripheral.find("speaker") }
 local volume = 50
-local CHUNK_SIZE = 16 * 1024
+local CHUNK_SIZE = 8 * 1024
 local decoder = dfpwm.make_decoder()
 print("Please paste a youtube link:")
 local input = io.read()
