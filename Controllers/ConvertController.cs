@@ -11,6 +11,7 @@ namespace InventoryWebsite.Controllers;
 [ApiController]
 public class ConvertController : ControllerBase
 {
+    // ffmpeg/bin
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<ConvertController> logger;
     public ConvertController(IHttpClientFactory httpClientFactory, ILogger<ConvertController> _logger)
@@ -62,19 +63,22 @@ public class ConvertController : ControllerBase
             video = videoInfos.First(i => i.Resolution == videoInfos.Min(j => j.Resolution));
             path += url + ".dfpwm"; //video.Title.Trim()
         }
-        byte[] bytes = await video.GetBytesAsync();
-        this.logger.LogError($"{bytes.Length}");
-        MemoryStream stream = new MemoryStream();
+        //byte[] bytes = await video.GetBytesAsync();
+        //this.logger.LogError($"{bytes.Length}");
+        //MemoryStream stream = new MemoryStream();
         //stream.Write(bytes, 0, bytes.Length);
+        
         await using (var audioOutputStream = System.IO.File.Open(path, FileMode.Create))
         {
             Console.WriteLine("Converting");
             FFMpegArguments
-                .FromPipeInput(new StreamPipeSource(stream))
+                .FromPipeInput(new StreamPipeSource(await video.StreamAsync()))
                 .OutputToPipe(new StreamPipeSink(audioOutputStream), options =>
                     options.ForceFormat("dfpwm")
                     .WithAudioBitrate(48)
                     .WithCustomArgument("-ac 1"))
+                .Configure(options => options.WorkingDirectory = "/mounts/files/myDirectory/ffmpeg/bin")
+                .Configure(options => options.TemporaryFilesFolder = "/mounts/files/myDirectory/ffmpeg")
                 .ProcessSynchronously();
         }
 

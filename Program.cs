@@ -6,7 +6,6 @@ using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging.AzureAppServices;
-using FFMpegCore;
 
 //239e90b60c03d4ec6
 
@@ -54,5 +53,5 @@ app.UseSession();
 app.UseAuthorization();
 app.MapControllers();
 app.MapRazorPages();
-GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "/mounts/files/myDirectory/ffmpeg/bin", TemporaryFilesFolder = "/tmp" });
+
 app.Run();
