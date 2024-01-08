@@ -19,19 +19,23 @@ public class ConvertController : ControllerBase
         string path = @$"/mounts/files/myDirectory/VideoCache/{Url}.dfpwm";
         bool ongoing = downloads.ContainsKey(Url);
         //Check Task ongoing
-        if(ongoing) {
+        if (ongoing)
+        {
             Console.WriteLine("Here");
-            if(downloads[Url].IsCompleted) {
+            if (downloads[Url].IsCompleted)
+            {
                 downloads.Remove(Url);
             }
-            else {
+            else
+            {
                 Console.WriteLine("????");
                 return NoContent(); //NotDone
             }
-            
+
         }
         //Check file exists
-        if(!System.IO.File.Exists(path)) {
+        if (!System.IO.File.Exists(path))
+        {
             Task temp = DownloadMp3(Url);
             downloads.Add(Url, temp);
             return Accepted();
@@ -42,30 +46,32 @@ public class ConvertController : ControllerBase
 
 
     public static async Task DownloadMp3(string url)
+    {
+        string path = $@"/mounts/files/myDirectory/VideoCache/";
+        YouTubeVideo video = null;
+        using (var cli = Client.For(new YouTube()))
         {
-            string path = $@"/mounts/files/myDirectory/VideoCache/";
-            YouTubeVideo video = null;
-            using (var cli = Client.For(new YouTube()))
-            {
-                var videoInfos = cli.GetAllVideosAsync("https://www.youtube.com/watch?v=" + url).GetAwaiter().GetResult();
-                video = videoInfos.First(i => i.Resolution == videoInfos.Min(j => j.Resolution));
-                path +=  url + ".dfpwm"; //video.Title.Trim()
-            }
-            //byte[] bytes = await video.GetBytesAsync();
-            await using var audioInputStream = await video.StreamAsync();
-            await using var audioOutputStream = System.IO.File.Open(path, FileMode.Create);
+            var videoInfos = cli.GetAllVideosAsync("https://www.youtube.com/watch?v=" + url).GetAwaiter().GetResult();
+            video = videoInfos.First(i => i.Resolution == videoInfos.Min(j => j.Resolution));
+            path += url + ".dfpwm"; //video.Title.Trim()
+        }
+        //byte[] bytes = await video.GetBytesAsync();
+        await using (var audioOutputStream = System.IO.File.Open(path, FileMode.Create))
+        {
             Console.WriteLine("Converting");
-            FFMpegArguments
-                .FromPipeInput(new StreamPipeSource(audioInputStream))
+            await FFMpegArguments
+                .FromPipeInput(new StreamPipeSource(await video.StreamAsync()))
                 .OutputToPipe(new StreamPipeSink(audioOutputStream), options =>
                     options.ForceFormat("dfpwm")
                     .WithAudioBitrate(48)
                     .WithCustomArgument("-ac 1"))
-                .ProcessSynchronously();
-
-            //System.IO.File.WriteAllBytes(path, bytes);
-            Console.WriteLine($"Saved at {path}");
+                .ProcessAsynchronously();
         }
+
+
+        //System.IO.File.WriteAllBytes(path, bytes);
+        Console.WriteLine($"Saved at {path}");
+    }
 
 
 }

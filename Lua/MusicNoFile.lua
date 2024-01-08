@@ -21,7 +21,7 @@ print(link)
 local fileDownload, reason = http.get("https://chestapp.azurewebsites.net/Music/convert/" .. link, nil, true)
 print(reason)
 local code = fileDownload.getResponseCode()
-while(code ~= "200 OK")do
+while(code ~= 200)do
   print(code)
   os.sleep(3)
   print("Downloading. . .")
