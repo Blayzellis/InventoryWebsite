@@ -70,6 +70,7 @@ public class ConvertController : ControllerBase
         
         await using (var audioOutputStream = System.IO.File.Open(path, FileMode.Create))
         {
+            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "/mounts/files/myDirectory/ffmpeg/bin", TemporaryFilesFolder = "/mounts/files/myDirectory/ffmpeg/tmp" });
             Console.WriteLine("Converting");
             FFMpegArguments
                 .FromPipeInput(new StreamPipeSource(await video.StreamAsync()))
@@ -77,8 +78,6 @@ public class ConvertController : ControllerBase
                     options.ForceFormat("dfpwm")
                     .WithAudioBitrate(48)
                     .WithCustomArgument("-ac 1"))
-                .Configure(options => options.WorkingDirectory = "/mounts/files/myDirectory/ffmpeg/bin")
-                .Configure(options => options.TemporaryFilesFolder = "/mounts/files/myDirectory/ffmpeg")
                 .ProcessSynchronously();
         }
 
