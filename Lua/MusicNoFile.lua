@@ -13,6 +13,7 @@ end
 local dfpwm = require("cc.audio.dfpwm")
 local speakers = { peripheral.find("speaker") }
 local volume = 50
+local CHUNK_SIZE = 16 * 1024
 local decoder = dfpwm.make_decoder()
 print("Please paste a youtube link:")
 local input = io.read()
@@ -32,15 +33,13 @@ end
 local data = fileDownload.readAll()
 while(true)
 do
-for i = 1, 1, 1
-do
-  for i = 1, #data, 16*64 do
-    local buffer = decoder(data:sub(i,i+16*64-1))
-
-      while not speakers[1].playAudio(buffer, volume) do
-          os.pullEvent("speaker_audio_empty")
-      end
+  for i = 1, #data, CHUNK_SIZE do
+    buffer = decoder(data:sub(i, i + CHUNK_SIZE - 1))
+    while not speakers[1].playAudio(buffer, volume) do
+      os.pullEvent("speaker_audio_empty")
     end
-end
+  end
+
+    
 
 end

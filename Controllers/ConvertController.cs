@@ -76,7 +76,7 @@ public class ConvertController : ControllerBase
                 .FromPipeInput(new StreamPipeSource(await video.StreamAsync()))
                 .OutputToPipe(new StreamPipeSink(audioOutputStream), options =>
                     options.ForceFormat("dfpwm")
-                    .WithAudioBitrate(48)
+                    .WithAudioBitrate(32)
                     .WithCustomArgument("-ac 1"))
                 .ProcessSynchronously();
         }
