@@ -11,7 +11,14 @@ namespace InventoryWebsite.Controllers;
 [ApiController]
 public class ConvertController : ControllerBase
 {
-    public Dictionary<string, Task> downloads = new Dictionary<string, Task>();
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<ConvertController> logger;
+    public ConvertController(IHttpClientFactory httpClientFactory, ILogger<ConvertController> _logger)
+    {
+        _httpClientFactory = httpClientFactory;
+        logger = _logger;
+    }
+    public static Dictionary<string, Task> downloads = new Dictionary<string, Task>();
     [HttpGet("{Url}")]
     public async Task<ActionResult> GetTodoItem(string Url)
     {
@@ -45,7 +52,7 @@ public class ConvertController : ControllerBase
     }
 
 
-    public static async Task DownloadMp3(string url)
+    public async Task DownloadMp3(string url)
     {
         string path = $@"/mounts/files/myDirectory/VideoCache/";
         YouTubeVideo video = null;
@@ -56,6 +63,7 @@ public class ConvertController : ControllerBase
             path += url + ".dfpwm"; //video.Title.Trim()
         }
         byte[] bytes = await video.GetBytesAsync();
+        this.logger.LogError($"{bytes.Length}");
         MemoryStream stream = new MemoryStream();
         stream.Write(bytes, 0, bytes.Length);
         await using (var audioOutputStream = System.IO.File.Open(path, FileMode.Create))
