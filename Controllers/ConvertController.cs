@@ -16,7 +16,7 @@ public class ConvertController : ControllerBase
     public async Task<ActionResult> GetTodoItem(string Url)
     {
         Console.WriteLine(Url);
-        string path = @$"VideoCache/{Url}.dfpwm";
+        string path = @$"/mounts/files/myDirectory/VideoCache/{Url}.dfpwm";
         bool ongoing = downloads.ContainsKey(Url);
         //Check Task ongoing
         if(ongoing) {
@@ -36,18 +36,18 @@ public class ConvertController : ControllerBase
             downloads.Add(Url, temp);
             return Accepted();
         }
-        Stream file = new FileStream(path, FileMode.Open);
-        return File(file, "audio/dfpwm", $"{Url}.dfpwm");
+        //Stream file = new FileStream(path, FileMode.Open);
+        return File(path, "audio/dfpwm", $"{Url}.dfpwm");
     }
 
 
     public static async Task DownloadMp3(string url)
         {
-            string path = $@"VideoCache/";
+            string path = $@"/mounts/files/myDirectory/VideoCache/";
             YouTubeVideo video = null;
             using (var cli = Client.For(new YouTube()))
             {
-                var videoInfos = cli.GetAllVideosAsync("https://www.youtube.com/watch?" + url).GetAwaiter().GetResult();
+                var videoInfos = cli.GetAllVideosAsync("https://www.youtube.com/watch?v=" + url).GetAwaiter().GetResult();
                 video = videoInfos.First(i => i.Resolution == videoInfos.Min(j => j.Resolution));
                 path +=  url + ".dfpwm"; //video.Title.Trim()
             }

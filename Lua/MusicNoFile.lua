@@ -1,9 +1,27 @@
+function mysplit (inputstr, sep)
+  if sep == nil then
+          sep = "%s"
+  end
+  local t={}
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+          table.insert(t, str)
+  end
+  return t
+end
+
+
 local dfpwm = require("cc.audio.dfpwm")
 local speakers = { peripheral.find("speaker") }
 local volume = 50
 local decoder = dfpwm.make_decoder()
 local song = "Song"
-local fileDownload, reason = http.get("http://162.231.184.144:8080/Music/convert/" .. arg[1], nil, true)
+local link = mysplit(arg[1], "v=")[2]
+local fileDownload, reason = http.get("https://chestapp.azurewebsites.net/Music/convert/" .. link, nil, true)
+local code = fileDownload.
+while(code = "")do
+
+end
+
 local data = fileDownload.readAll()
 while(true)
 do

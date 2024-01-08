@@ -19,4 +19,8 @@
     <PackageReference Include="VideoLibrary" Version="3.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="VideoCache\" />
+  </ItemGroup>
+
 </Project>

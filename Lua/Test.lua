@@ -1,4 +1,4 @@
-request = http.get("http://162.231.184.144:8080/Music/convert/" .. arg[1], nil, true)
+request = http.get("https://chestapp.azurewebsites.net/Music/convert/" .. arg[1], nil, true)
 print(textutils.serialize(request.getResponseHeaders()))
 print(request.getResponseCode())
 local handle = request.readAll()

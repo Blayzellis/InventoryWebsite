@@ -1,6 +1,6 @@
 local LibDeflate = require("LibDeflate")
-
-local fileDownload, reason = http.get("http://162.231.184.144:8080/Music/convert/" .. arg[1], nil, true)
+local link = arg[1]
+local fileDownload, reason = http.get("https://chestapp.azurewebsites.net/Music/convert/" .. link, nil, true)
 
 if(fileDownload) then
     local handle = fileDownload.readAll()
